@@ -1,83 +1,79 @@
-# Python Source Plugin Template
-This repo contains everything you need to get started with building a new plugin.
-To get started all you need to do is change a few names, define some tables, and write an API Client to populate the tables.
+# Bitly Source Plugin for CloudQuery
 
-[![Mastering CloudQuery: How to build a Source Plugin in Python](https://i.ytimg.com/vi/TSbGHz5Z09M/maxresdefault.jpg)](https://youtu.be/TSbGHz5Z09M "Mastering CloudQuery: How to build a Source Plugin in Python")
+Bitly plugin for CloudQuery to get links and their stats.
 
-## Key files & classes
- - plugin/tables/items.py
-    - Items - A boilerplate table definition
-    - ItemResolver - A boilerplate table resolver
- - plugin/example/client.py
-     - ExampleClient - A boilerplate API Client
- - plugin/client/client.py
-    - Spec - Defines the CloudQuery Config
-    - Client (uses: ExampleClient) - Wraps your API Client
- - plugin/plugin.py
-    - ExamplePlugin - The plugin registration / how CloudQuery knows what tables your plugin exposes.
+## Spec
 
+```yaml
+kind: source
+spec:
+  name: "bitly"
+  registry: "grpc"
+  path: "localhost:7777"
+  tables: ['*']
+  destinations: ["sqlite"]
+  spec:
+    group_id: ${BITLY_GROUP_ID}     # mandatory
+    api_token: ${BITLY_API_TOKEN}   # mandatory
+    extract_utm: true               # optional. If set, extracts utm_tags from the long_url into separate columns
+```
 
+## Tables
 
-## Getting started
+### Bitlinks
 
-### Defining your tables
-The first thing you need to do is identify the tables you want to create with your plugin.
-Conventionally, CloudQuery plugins have a direct relationship between tables and API responses.
+[Source API](https://dev.bitly.com/api-reference/#getBitlinksByGroup)
 
-For example:
-   If you had an API endpoint https://api.example.com/items/{num} and for each value of `num` it provided an object
-   ```json
-   {
-      "num": {{num}},
-      "date": "2023-10-12", 
-      "title": "A simple example"
-   }
-   ```
-   Then you would design the table class as
-   ```python
-   class Items(Table):
-       def __init__(self) -> None:
-           super().__init__(
-               name="item",
-               title="Item",
-               columns=[
-                   Column("num", pa.uint64(), primary_key=True),
-                   Column("date", pa.date64()),
-                   Column("title", pa.string()),
-               ],
-           )
-       ...
-   ```
+|Column name | Type |
+|---|---|
+|created_at | timestamp |
+|id | string, primary key|
+|link | string|
+|custom_bitlinks |JSON|
+|launchpad_ids |JSON|
+|campaign_ids |JSON|
+|long_url | string|
+|title | string|
+|archived | boolean|
+|created_by | string|
+|client_id | string|
+|tags |JSON|
+|deeplinks |JSON|
+|references |JSON|
 
-Creating one table for each endpoint that you want to capture.
+With `extract_utm` set to `true`, the following columns are also added:
 
-### API Client
-Next you'll need to define how the tables are retrieved, it's recommended to implement this as a generator, as per the example in `plugin/example/client.py`.
+|Column name | Type |
+|---|---|
+|utm_source | string |
+|utm_medium | string |
+|utm_campaign | string |
+|utm_id | string |
+|utm_term | string |
+|utm_content | string |
 
-### Spec
-Having written your API Client you will have, identified the authentication and/or operational variables needed.
-Adding these to the CloudQuery config spec can be done by editing the `Spec` `dataclass` using standard python, and adding validation where needed.
+### Bitlinks Clicks
 
-### Plugin
-Finally, you need to edit the `plugin.py` file to set the plugin name and version, and add the `Tables` to the `get_tables` function. 
+[Source API](https://dev.bitly.com/api-reference/#getClicksForBitlink)
 
-### Test run
-To test your plugin you can run it locally.
+This table is incremental and adds daily stats.
 
-To automatically manage your virtual environment and install the dependencies listed in the `pyproject.toml` you can use `poetry`.
-Poetry is an improved package & environment manager for Python that uses the standardised `pyproject.toml`, if you don't have it installed you can pull it with `pip install poetry`.
+|Column name | Type |
+|---|---|
+| link_id | string |
+| date | timestamp |
+| clicks | int64 |
 
-To install the dependencies into a new virtual environment run `poetry install`.
-If you have additional dependencies you can add them with `poetry add {package_name}` which will add them to the `pyproject.toml` and install them into the virtual environment.
+### Bitlinks Click Summary
 
-Then to run the plugin `poetry run main serve`, which will launch the plugin manually as a GRPC service.
+[Source API](https://dev.bitly.com/api-reference/#getClicksSummaryForBitlink)
 
-With that running you can adjust the `TestConfig.yaml` to match your plugin and run `cloudquery sync`.
-This should result in the creation of a sqlite database `db.sqlite` where you can validate your tables are as expected.
+Gets a 45 day summary of link clicks.
 
-
-## Links
-
-- [Architecture](https://www.cloudquery.io/docs/developers/architecture)
-- [Concepts](https://www.cloudquery.io/docs/developers/creating-new-plugin/python-source)
-- [Video tutorial](https://youtu.be/TSbGHz5Z09M)
+|Column name | Type |
+|---|---|
+| link_id | string, primary key|
+| unit_reference | timestamp |
+| total_clicks | int64 |
+| units | int16 |
+| unit | string |
