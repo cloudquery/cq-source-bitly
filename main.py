@@ -1,11 +1,11 @@
 import sys
 from cloudquery.sdk import serve
 
-from plugin import ExamplePlugin
+from plugin import BitlyPlugin
 
 
 def main():
-    p = ExamplePlugin()
+    p = BitlyPlugin()
     serve.PluginCommand(p).run(sys.argv[1:])
 
 

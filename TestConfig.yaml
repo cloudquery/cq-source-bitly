@@ -1,12 +1,14 @@
 kind: source
 spec:
-  name: "comics"
+  name: "bitly"
   registry: "grpc"
   path: "localhost:7777"
   tables: ['*']
   destinations: ["sqlite"]
   spec:
-    base_url: https://xkcd.com
+    group_id: ${BITLY_GROUP_ID}
+    api_token: ${BITLY_API_TOKEN}
+    extract_utm: true
 ---
 kind: destination
 spec:

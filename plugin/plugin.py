@@ -10,11 +10,11 @@ from cloudquery.sdk.scheduler import Scheduler, TableResolver
 from plugin import tables
 from plugin.client import Client, Spec
 
-PLUGIN_NAME = "example"
+PLUGIN_NAME = "bitly"
 PLUGIN_VERSION = "1.0.0"  # {x-release-please-version}
 
 
-class ExamplePlugin(plugin.Plugin):
+class BitlyPlugin(plugin.Plugin):
     def __init__(self) -> None:
         super().__init__(PLUGIN_NAME, PLUGIN_VERSION)
         self._spec_json = None
@@ -39,7 +39,7 @@ class ExamplePlugin(plugin.Plugin):
 
     def get_tables(self, options: plugin.TableOptions) -> List[plugin.Table]:
         all_tables: List[plugin.Table] = [
-            tables.Items(),
+            tables.Bitlinks(self._spec.extract_utm),
         ]
 
         # set parent table relationships

@@ -1,2 +1,5 @@
-venv
+.venv
 __pycache__
+.cq
+cloudquery.log
+db.sqlite
