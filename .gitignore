@@ -3,3 +3,4 @@ __pycache__
 .cq
 cloudquery.log
 db.sqlite
+.env

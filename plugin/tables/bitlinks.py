@@ -11,7 +11,7 @@ from plugin.client import Client
 class Bitlinks(Table):
     def __init__(self, extract_utm=False) -> None:
         columns = [
-            Column("created_at", pa.string()), # todo: change to date
+            Column("created_at", pa.timestamp(unit="s")), # todo: change to date
             Column("id", pa.string(), primary_key=True),
             Column("link", pa.string()),
             Column("custom_bitlinks", JSONType()),
