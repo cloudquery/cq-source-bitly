@@ -7,11 +7,14 @@ from cloudquery.sdk.schema import Table
 from cloudquery.sdk.schema.resource import Resource
 from cloudquery.sdk.types import JSONType
 from plugin.client import Client
+from .bitlinks_click_summary import BitlinksClickSummary
+from .bitlinks_clicks import BitlinksClicks
+
 
 class Bitlinks(Table):
     def __init__(self, extract_utm=False) -> None:
         columns = [
-            Column("created_at", pa.timestamp(unit="s")), # todo: change to date
+            Column("created_at", pa.timestamp(unit="s")),
             Column("id", pa.string(), primary_key=True),
             Column("link", pa.string()),
             Column("custom_bitlinks", JSONType()),
@@ -24,7 +27,7 @@ class Bitlinks(Table):
             Column("client_id", pa.string()),
             Column("tags", JSONType()),
             Column("deeplinks", JSONType()),
-            Column("references", JSONType())
+            Column("references", JSONType()),
         ]
         utm_columns = [
             Column("utm_source", pa.string()),
@@ -40,6 +43,7 @@ class Bitlinks(Table):
             name="bitlinks",
             title="bitlinks",
             columns=columns,
+            relations=[BitlinksClickSummary(), BitlinksClicks()],
         )
 
     @property
@@ -52,10 +56,9 @@ class BitlinksResolver(TableResolver):
         super().__init__(table=table)
 
     def resolve(self, client: Client, parent_resource) -> Generator[Any, None, None]:
-        for form in client.client.list_bitlinks():
-            yield form
+        for bitlink in client.client.list_bitlinks():
+            yield bitlink
 
-    # @property
-    # def child_resolvers(self):
-    #     return [table.resolver for table in self._table.relations]
-
+    @property
+    def child_resolvers(self):
+        return [table.resolver for table in self._table.relations]
