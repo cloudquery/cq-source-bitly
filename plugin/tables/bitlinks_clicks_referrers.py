@@ -11,17 +11,17 @@ from plugin.bitly.get_unit_metrics import get_unit_metrics
 from plugin.client import Client
 
 
-class BitlinksClicksCountries(Table):
-    def __init__(self, countries_summary_unit) -> None:
-        self._countries_summary_unit = countries_summary_unit
+class BitlinksClicksReferrers(Table):
+    def __init__(self, referrers_summary_unit) -> None:
+        self._referrers_summary_unit = referrers_summary_unit
         super().__init__(
-            name="bitlinks_clicks_countries",
-            title="Bitlinks Clicks by Country",
+            name="bitlinks_clicks_referrers",
+            title="Bitlinks Clicks by Referrer",
             is_incremental=True,
             columns=[
                 Column("link_id", pa.string()),
                 Column("timestamp", pa.timestamp(unit="s")),
-                Column("country", pa.string()),
+                Column("referrer", pa.string()),
                 Column("clicks", pa.int64()),
                 Column("unit", pa.string())
             ],
@@ -29,17 +29,17 @@ class BitlinksClicksCountries(Table):
 
     @property
     def resolver(self):
-        return BitlinksClicksCountriesResolver(table=self, countries_summary_unit=self._countries_summary_unit)
+        return BitlinksClicksReferrersResolver(table=self, referrers_summary_unit=self._referrers_summary_unit)
 
 
-class BitlinksClicksCountriesResolver(TableResolver):
-    def __init__(self, table, countries_summary_unit) -> None:
-        self._countries_summary_unit = countries_summary_unit
+class BitlinksClicksReferrersResolver(TableResolver):
+    def __init__(self, table, referrers_summary_unit) -> None:
+        self._referrers_summary_unit = referrers_summary_unit
         super().__init__(table=table)
 
     def resolve(
         self, client: Client, parent_resource: Resource
     ) -> Generator[Any, None, None]:
-        link_stats = client.client.get_link_countries_clicks(parent_resource.item["id"], self._countries_summary_unit)
-        metrics = get_unit_metrics(link_stats, parent_resource.item["id"], "country")
+        link_stats = client.client.get_link_referrers_clicks(parent_resource.item["id"], self._referrers_summary_unit)
+        metrics = get_unit_metrics(link_stats, parent_resource.item["id"], "referrer")
         return metrics

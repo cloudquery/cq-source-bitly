@@ -16,7 +16,9 @@ spec:
     group_id: ${BITLY_GROUP_ID}     # mandatory
     api_token: ${BITLY_API_TOKEN}   # mandatory
     extract_utm: true               # optional. If set, extracts utm_tags from the long_url into separate columns
-    countries_summary_unit: "month" # optional. unit to use to query last 1 {unit} of clicks by country. Default: month. Values: hour, day, week, month.
+    countries_summary_unit: "month" # optional. unit to use to query last 1 {unit} of clicks by a country. Default: month. Values: hour, day, week, month.
+    referrers_summary_unit: "month" # optional. unit to use to query last 1 {unit} of clicks by a referrer. Default: month. Values: hour, day, week, month.
+
 ```
 
 ## Tables
@@ -89,7 +91,7 @@ Gets a 45 day summary of link clicks.
 
 ### Bitlinks Clicks Countries
 
-[Source API]https://dev.bitly.com/api-reference/#getMetricsForBitlinkByCountries
+[Source API](https://dev.bitly.com/api-reference/#getMetricsForBitlinkByCountries)
 
 This table is incremental and adds stats based on the configured value of `countries_summary_unit`.
 
@@ -103,3 +105,22 @@ Each sync adds rows (if not present already) for the last 1 {`countries_summary_
 | timestamp | timestamp |
 | country | string |
 | clicks | int64 |
+| unit | string |
+
+### Bitlinks Clicks Referrers
+
+[Source API](https://dev.bitly.com/api-reference/#getMetricsForBitlinkByReferrers)
+
+This table is incremental and adds stats based on the configured value of `referrers_summary_unit`.
+
+Each sync adds rows (if not present already) for the last 1 {`referrers_summary_unit`}.
+
+|Column name | Type |
+|---|---|
+| _cq_sync_time| timestamp |
+| _cq_source_name| string |
+| link_id | string |
+| timestamp | timestamp |
+| referrer | string |
+| clicks | int64 |
+| unit | string |

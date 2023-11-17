@@ -31,15 +31,16 @@ def get_start_date(unit_reference: str, unit: str) -> str:
             raise ValueError(f"Invalid unit: {unit}")
 
 
-def get_unit_metrics(data: dict, link_id):
+def get_unit_metrics(data: dict, link_id: str, value_key: str):
     start_date = get_start_date(data["unit_reference"], data["unit"])
     return list(
         map(
             lambda metric: {
                 "link_id": link_id,
                 "timestamp": start_date,
-                "country": metric["value"],
+                value_key: metric["value"],
                 "clicks": metric["clicks"],
+                "unit": data["unit"],
             },
             data["metrics"],
         )
