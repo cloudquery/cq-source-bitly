@@ -9,10 +9,10 @@ from cloudquery.sdk.types import JSONType
 from plugin.client import Client
 from .bitlinks_click_summary import BitlinksClickSummary
 from .bitlinks_clicks import BitlinksClicks
-
+from .bitlinks_clicks_countries import BitlinksClicksCountries
 
 class Bitlinks(Table):
-    def __init__(self, extract_utm=False) -> None:
+    def __init__(self, extract_utm=False, countries_summary_unit = "month") -> None:
         columns = [
             Column("created_at", pa.timestamp(unit="s")),
             Column("id", pa.string(), primary_key=True),
@@ -43,7 +43,7 @@ class Bitlinks(Table):
             name="bitlinks",
             title="bitlinks",
             columns=columns,
-            relations=[BitlinksClickSummary(), BitlinksClicks()],
+            relations=[BitlinksClickSummary(), BitlinksClicks(), BitlinksClicksCountries(countries_summary_unit)],
         )
 
     @property
