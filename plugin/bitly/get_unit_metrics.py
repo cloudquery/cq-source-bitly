@@ -25,7 +25,9 @@ def get_start_date(unit_reference: str, unit: str) -> str:
             dt_object = datetime.strptime(unit_reference, "%Y-%m-%dT%H:%M:%S%z")
             days_to_subtract = dt_object.weekday()
             start_of_week = dt_object - timedelta(days=days_to_subtract)
-            return start_of_week.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S%z")
+            return start_of_week.replace(
+                hour=0, minute=0, second=0, microsecond=0
+            ).strftime("%Y-%m-%dT%H:%M:%S%z")
 
         case _:
             raise ValueError(f"Invalid unit: {unit}")

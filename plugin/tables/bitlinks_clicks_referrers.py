@@ -23,13 +23,15 @@ class BitlinksClicksReferrers(Table):
                 Column("timestamp", pa.timestamp(unit="s")),
                 Column("referrer", pa.string()),
                 Column("clicks", pa.int64()),
-                Column("unit", pa.string())
+                Column("unit", pa.string()),
             ],
         )
 
     @property
     def resolver(self):
-        return BitlinksClicksReferrersResolver(table=self, referrers_summary_unit=self._referrers_summary_unit)
+        return BitlinksClicksReferrersResolver(
+            table=self, referrers_summary_unit=self._referrers_summary_unit
+        )
 
 
 class BitlinksClicksReferrersResolver(TableResolver):
@@ -40,6 +42,8 @@ class BitlinksClicksReferrersResolver(TableResolver):
     def resolve(
         self, client: Client, parent_resource: Resource
     ) -> Generator[Any, None, None]:
-        link_stats = client.client.get_link_referrers_clicks(parent_resource.item["id"], self._referrers_summary_unit)
+        link_stats = client.client.get_link_referrers_clicks(
+            parent_resource.item["id"], self._referrers_summary_unit
+        )
         metrics = get_unit_metrics(link_stats, parent_resource.item["id"], "referrer")
         return metrics

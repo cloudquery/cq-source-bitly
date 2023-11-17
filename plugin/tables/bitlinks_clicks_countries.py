@@ -23,13 +23,15 @@ class BitlinksClicksCountries(Table):
                 Column("timestamp", pa.timestamp(unit="s")),
                 Column("country", pa.string()),
                 Column("clicks", pa.int64()),
-                Column("unit", pa.string())
+                Column("unit", pa.string()),
             ],
         )
 
     @property
     def resolver(self):
-        return BitlinksClicksCountriesResolver(table=self, countries_summary_unit=self._countries_summary_unit)
+        return BitlinksClicksCountriesResolver(
+            table=self, countries_summary_unit=self._countries_summary_unit
+        )
 
 
 class BitlinksClicksCountriesResolver(TableResolver):
@@ -40,6 +42,8 @@ class BitlinksClicksCountriesResolver(TableResolver):
     def resolve(
         self, client: Client, parent_resource: Resource
     ) -> Generator[Any, None, None]:
-        link_stats = client.client.get_link_countries_clicks(parent_resource.item["id"], self._countries_summary_unit)
+        link_stats = client.client.get_link_countries_clicks(
+            parent_resource.item["id"], self._countries_summary_unit
+        )
         metrics = get_unit_metrics(link_stats, parent_resource.item["id"], "country")
         return metrics

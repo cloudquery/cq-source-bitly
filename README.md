@@ -16,9 +16,10 @@ spec:
     group_id: ${BITLY_GROUP_ID}     # mandatory
     api_token: ${BITLY_API_TOKEN}   # mandatory
     extract_utm: true               # optional. If set, extracts utm_tags from the long_url into separate columns
-    countries_summary_unit: "month" # optional. unit to use to query last 1 {unit} of clicks by a country. Default: month. Values: hour, day, week, month.
-    referrers_summary_unit: "month" # optional. unit to use to query last 1 {unit} of clicks by a referrer. Default: month. Values: hour, day, week, month.
-
+    # optional. unit to use to query last 1 {unit} of clicks by a country. Default: month. Values: hour, day, week, month.
+    #countries_summary_unit: "month" 
+    # optional. unit to use to query last 1 {unit} of clicks by a referrer. Default: month. Values: hour, day, week, month.
+    #referrers_summary_unit: "month" 
 ```
 
 ## Tables

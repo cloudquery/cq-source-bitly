@@ -4,7 +4,15 @@ from .extract_utm import extract_utm
 
 
 class BitlyClient:
-    def __init__(self, api_token, group_id, base_url, extract_utm, countries_summary_unit, referrers_summary_unit):
+    def __init__(
+        self,
+        api_token,
+        group_id,
+        base_url,
+        extract_utm,
+        countries_summary_unit,
+        referrers_summary_unit,
+    ):
         self._api_token = api_token
         self._group_id = group_id
         self._base_url = base_url
@@ -38,7 +46,7 @@ class BitlyClient:
         resp = self._get(f"bitlinks/{link_id}/clicks/summary")
         if resp.status_code != 200:
             raise Exception(
-                f"Failed to get bilink clicks summary for link id '{link_id}': {resp.text}"
+                f"Failed to get bitlink clicks summary for link id '{link_id}': {resp.text}"
             )
         yield resp.json()
 
@@ -46,7 +54,7 @@ class BitlyClient:
         resp = self._get(f"bitlinks/{link_id}/clicks?unit=day&units=45")
         if resp.status_code != 200:
             raise Exception(
-                f"Failed to get bilink clicks summary for link id '{link_id}': {resp.text}"
+                f"Failed to get bitlink clicks summary for link id '{link_id}': {resp.text}"
             )
         return resp.json()["link_clicks"]
 
@@ -54,7 +62,7 @@ class BitlyClient:
         resp = self._get(f"bitlinks/{link_id}/countries?unit={unit}&units=1")
         if resp.status_code != 200:
             raise Exception(
-                f"Failed to get bilink clicks countries for link id '{link_id}': {resp.text}"
+                f"Failed to get bitlink clicks countries for link id '{link_id}': {resp.text}"
             )
         return resp.json()
 
@@ -62,6 +70,6 @@ class BitlyClient:
         resp = self._get(f"bitlinks/{link_id}/referrers?unit={unit}&units=1")
         if resp.status_code != 200:
             raise Exception(
-                f"Failed to get bilink clicks referrers for link id '{link_id}': {resp.text}"
+                f"Failed to get bitlink clicks referrers for link id '{link_id}': {resp.text}"
             )
         return resp.json()

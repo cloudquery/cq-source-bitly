@@ -12,8 +12,14 @@ from .bitlinks_clicks import BitlinksClicks
 from .bitlinks_clicks_countries import BitlinksClicksCountries
 from .bitlinks_clicks_referrers import BitlinksClicksReferrers
 
+
 class Bitlinks(Table):
-    def __init__(self, extract_utm=False, countries_summary_unit = "month", referrers_summary_unit="month") -> None:
+    def __init__(
+        self,
+        extract_utm=False,
+        countries_summary_unit="month",
+        referrers_summary_unit="month",
+    ) -> None:
         columns = [
             Column("created_at", pa.timestamp(unit="s")),
             Column("id", pa.string(), primary_key=True),
@@ -45,10 +51,11 @@ class Bitlinks(Table):
             title="bitlinks",
             columns=columns,
             relations=[
-                BitlinksClickSummary(), 
-                BitlinksClicks(), 
-                BitlinksClicksCountries(countries_summary_unit), 
-                BitlinksClicksReferrers(referrers_summary_unit)],
+                BitlinksClickSummary(),
+                BitlinksClicks(),
+                BitlinksClicksCountries(countries_summary_unit),
+                BitlinksClicksReferrers(referrers_summary_unit),
+            ],
         )
 
     @property
