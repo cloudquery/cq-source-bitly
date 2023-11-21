@@ -9,6 +9,8 @@ spec:
     group_id: ${BITLY_GROUP_ID}
     api_token: ${BITLY_API_TOKEN}
     extract_utm: true
+    countries_summary_unit: "month"
+    referrers_summary_unit: "month"
 ---
 kind: destination
 spec:

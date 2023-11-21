@@ -39,7 +39,7 @@ class BitlyPlugin(plugin.Plugin):
 
     def get_tables(self, options: plugin.TableOptions) -> List[plugin.Table]:
         all_tables: List[plugin.Table] = [
-            tables.Bitlinks(self._spec.extract_utm),
+            tables.Bitlinks(self._spec.extract_utm, self._spec.countries_summary_unit),
         ]
 
         # set parent table relationships
