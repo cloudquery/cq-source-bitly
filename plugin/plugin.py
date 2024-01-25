@@ -16,7 +16,7 @@ PLUGIN_VERSION = "1.0.0"  # {x-release-please-version}
 
 class BitlyPlugin(plugin.Plugin):
     def __init__(self) -> None:
-        super().__init__(PLUGIN_NAME, PLUGIN_VERSION)
+        super().__init__(PLUGIN_NAME, PLUGIN_VERSION, opts=plugin.plugin.Options(team="mbr-cq", kind="source"),)
         self._spec_json = None
         self._spec = None
         self._scheduler = None
