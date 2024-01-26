@@ -16,7 +16,11 @@ PLUGIN_VERSION = "1.0.0"  # {x-release-please-version}
 
 class BitlyPlugin(plugin.Plugin):
     def __init__(self) -> None:
-        super().__init__(PLUGIN_NAME, PLUGIN_VERSION)
+        super().__init__(
+            PLUGIN_NAME,
+            PLUGIN_VERSION,
+            opts=plugin.plugin.Options(team="cloudquery", kind="source"),
+        )
         self._spec_json = None
         self._spec = None
         self._scheduler = None
@@ -26,10 +30,11 @@ class BitlyPlugin(plugin.Plugin):
     def set_logger(self, logger) -> None:
         self._logger = logger
 
-    def init(self, spec_bytes, no_connection: bool = False):
+
+    def init(self, spec, no_connection: bool = False):
         if no_connection:
             return
-        self._spec_json = json.loads(spec_bytes)
+        self._spec_json = json.loads(spec)
         self._spec = Spec(**self._spec_json)
         self._spec.validate()
         self._scheduler = Scheduler(
@@ -38,8 +43,10 @@ class BitlyPlugin(plugin.Plugin):
         self._client = Client(self._spec)
 
     def get_tables(self, options: plugin.TableOptions) -> List[plugin.Table]:
+        extract_utm = self._spec.extract_utm if self._spec else False
+        countries_summary_unit = self._spec.countries_summary_unit if self._spec else "month"
         all_tables: List[plugin.Table] = [
-            tables.Bitlinks(self._spec.extract_utm, self._spec.countries_summary_unit),
+            tables.Bitlinks(extract_utm, countries_summary_unit),
         ]
 
         # set parent table relationships
