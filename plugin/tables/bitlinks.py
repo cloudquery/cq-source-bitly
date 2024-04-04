@@ -19,7 +19,9 @@ class Bitlinks(Table):
         extract_utm=False,
         countries_summary_unit="month",
         referrers_summary_unit="month",
+        link_filter=[],
     ) -> None:
+        self.link_filter = link_filter
         columns = [
             Column("created_at", pa.timestamp(unit="s")),
             Column("id", pa.string(), primary_key=True),
@@ -60,15 +62,16 @@ class Bitlinks(Table):
 
     @property
     def resolver(self):
-        return BitlinksResolver(table=self)
+        return BitlinksResolver(table=self, link_filter=self.link_filter)
 
 
 class BitlinksResolver(TableResolver):
-    def __init__(self, table=None) -> None:
+    def __init__(self, table=None, link_filter = []) -> None:
         super().__init__(table=table)
+        self.link_filter = link_filter
 
     def resolve(self, client: Client, parent_resource) -> Generator[Any, None, None]:
-        for bitlink in client.client.list_bitlinks():
+        for bitlink in filter(lambda l: len(self.link_filter) == 0 or l["id"] in self.link_filter, client.client.list_bitlinks()):
             yield bitlink
 
     @property

@@ -17,6 +17,7 @@ class Spec:
     extract_utm: bool = field(default=False)
     countries_summary_unit: str = field(default="month")
     referrers_summary_unit: str = field(default="month")
+    only: list[str] = field(default_factory=list)
 
     def validate_summary_unit(self, unit: str, name: str):
         if unit not in ["hour", "day", "week", "month"]:

@@ -20,6 +20,9 @@ spec:
     #countries_summary_unit: "month" 
     # optional. unit to use to query last 1 {unit} of clicks by a referrer. Default: month. Values: hour, day, week, month.
     #referrers_summary_unit: "month" 
+    #optional: get data only for the links on the list 
+    #only: 
+    #  - bit.ly/1234567
 ```
 
 ## Tables
