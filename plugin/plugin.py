@@ -11,7 +11,7 @@ from plugin import tables
 from plugin.client import Client, Spec
 
 PLUGIN_NAME = "bitly"
-PLUGIN_VERSION = "1.0.0"  # {x-release-please-version}
+PLUGIN_VERSION = "1.1.0"  # {x-release-please-version}
 
 
 class BitlyPlugin(plugin.Plugin):
@@ -45,8 +45,10 @@ class BitlyPlugin(plugin.Plugin):
     def get_tables(self, options: plugin.TableOptions) -> List[plugin.Table]:
         extract_utm = self._spec.extract_utm if self._spec else False
         countries_summary_unit = self._spec.countries_summary_unit if self._spec else "month"
+        only = self._spec.only if self._spec else []
+        created_after = self._spec.created_after if self._spec else None
         all_tables: List[plugin.Table] = [
-            tables.Bitlinks(extract_utm, countries_summary_unit, link_filter=self._spec.only, created_after = self._spec.created_after)
+            tables.Bitlinks(extract_utm, countries_summary_unit, link_filter=only, created_after = created_after)
         ]
 
         # set parent table relationships
