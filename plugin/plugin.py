@@ -46,7 +46,7 @@ class BitlyPlugin(plugin.Plugin):
         extract_utm = self._spec.extract_utm if self._spec else False
         countries_summary_unit = self._spec.countries_summary_unit if self._spec else "month"
         all_tables: List[plugin.Table] = [
-            tables.Bitlinks(extract_utm, countries_summary_unit, link_filter=self._spec.only),
+            tables.Bitlinks(extract_utm, countries_summary_unit, link_filter=self._spec.only, created_after = self._spec.created_after)
         ]
 
         # set parent table relationships

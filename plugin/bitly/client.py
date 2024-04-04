@@ -25,10 +25,10 @@ class BitlyClient:
         headers = {"Authorization": f"Bearer {self._api_token}"}
         return requests.get(url, headers=headers, params=params)
 
-    def list_bitlinks(self, search_after=""):
+    def list_bitlinks(self, search_after="", created_after=""):
         resp = self._get(
             f"groups/{self._group_id}/bitlinks",
-            {"size": 50, "search_after": search_after},
+            {"size": 50, "search_after": search_after, "created_after": created_after},
         )
         if resp.status_code != 200:
             raise Exception(f"Failed to list bitlinks: {resp.text}")

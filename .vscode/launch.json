@@ -12,6 +12,22 @@
             "args": ["serve"],
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "Pytest Debug",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "${workspaceFolder}",
+                "--pdb",
+                "-s"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
         }
     ]
 }
