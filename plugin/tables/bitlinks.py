@@ -6,6 +6,7 @@ from cloudquery.sdk.schema import Column
 from cloudquery.sdk.schema import Table
 from cloudquery.sdk.schema.resource import Resource
 from cloudquery.sdk.types import JSONType
+from plugin.bitly.relative_date import get_date
 from plugin.client import Client
 from .bitlinks_click_summary import BitlinksClickSummary
 from .bitlinks_clicks import BitlinksClicks
@@ -19,7 +20,11 @@ class Bitlinks(Table):
         extract_utm=False,
         countries_summary_unit="month",
         referrers_summary_unit="month",
+        link_filter=[],
+        created_after=None,
     ) -> None:
+        self.link_filter = link_filter
+        self.created_after = created_after
         columns = [
             Column("created_at", pa.timestamp(unit="s")),
             Column("id", pa.string(), primary_key=True),
@@ -60,15 +65,19 @@ class Bitlinks(Table):
 
     @property
     def resolver(self):
-        return BitlinksResolver(table=self)
+        return BitlinksResolver(table=self, link_filter=self.link_filter, created_after=self.created_after)
 
 
 class BitlinksResolver(TableResolver):
-    def __init__(self, table=None) -> None:
+    def __init__(self, table=None, link_filter = [], created_after = None) -> None:
         super().__init__(table=table)
+        self.link_filter = link_filter
+        self.created_after = created_after
+        if created_after:
+            self.created_after = str(int(get_date(created_after).timestamp()))
 
     def resolve(self, client: Client, parent_resource) -> Generator[Any, None, None]:
-        for bitlink in client.client.list_bitlinks():
+        for bitlink in filter(lambda l: len(self.link_filter) == 0 or l["id"] in self.link_filter, client.client.list_bitlinks(created_after=self.created_after)):
             yield bitlink
 
     @property

@@ -17,3 +17,7 @@ poetry run main serve
 2. Run `cloudquery plugin publish` to publish the plugin to the CloudQuery registry. Run the command with `-f` to remove the draft status.
 
 Read more about publishing plugins in the [documentation](https://docs.cloudquery.io/docs/developers/publishing-an-addon-to-the-hub).
+
+## Testing
+
+To run unit tests, simply run `pytest`.

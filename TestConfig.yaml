@@ -11,11 +11,20 @@ spec:
     extract_utm: true
     countries_summary_unit: "month"
     referrers_summary_unit: "month"
+    # only:
+    #   - cql.ink/3U1cw4D
+    #   - cql.ink/3PMZKUS
+    # only include links created after the specified date
+    # supported formats:
+    # - "YYYY-MM-DD"
+    # - "-<number> <unit>" where number is integer and unit is "day", "week"
+    created_after: "-1 day"
 ---
 kind: destination
 spec:
   name: sqlite
   path: cloudquery/sqlite
   version: "v2.4.11"
+  write_mode: overwrite
   spec:
     connection_string: ./db.sqlite

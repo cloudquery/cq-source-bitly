@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from cloudquery.sdk.scheduler import Client as ClientABC
 
+from plugin.bitly.relative_date import get_date
 from plugin.bitly.client import BitlyClient
 
 DEFAULT_CONCURRENCY = 100
@@ -17,6 +18,8 @@ class Spec:
     extract_utm: bool = field(default=False)
     countries_summary_unit: str = field(default="month")
     referrers_summary_unit: str = field(default="month")
+    only: list[str] = field(default_factory=list)
+    created_after: str = field(default=None)
 
     def validate_summary_unit(self, unit: str, name: str):
         if unit not in ["hour", "day", "week", "month"]:
@@ -33,6 +36,11 @@ class Spec:
         self.validate_summary_unit(
             self.referrers_summary_unit, "referrers_summary_unit"
         )
+        if self.created_after:
+            try:
+                get_date(self.created_after)
+            except:
+                raise Exception("created_after must be a valid date or relative time string like -1 week, -1 day")
 
 
 class Client(ClientABC):

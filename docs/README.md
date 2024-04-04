@@ -17,9 +17,16 @@ spec:
     api_token: ${BITLY_API_TOKEN}   # mandatory
     extract_utm: true               # optional. If set, extracts utm_tags from the long_url into separate columns
     # optional. unit to use to query last 1 {unit} of clicks by a country. Default: month. Values: hour, day, week, month.
-    #countries_summary_unit: "month" 
+    countries_summary_unit: "month" 
     # optional. unit to use to query last 1 {unit} of clicks by a referrer. Default: month. Values: hour, day, week, month.
-    #referrers_summary_unit: "month" 
+    referrers_summary_unit: "month" 
+    #optional: get data only for the links on the list 
+    only: 
+      - bit.ly/1234567
+    # optional, includes only links created after the specified date. Supported formats:
+    # - "YYYY-MM-DD"
+    # - "-<number> <unit>" where number is integer and unit is "day", "week"
+    created_after: "-1 day"
 ```
 
 ## Tables
