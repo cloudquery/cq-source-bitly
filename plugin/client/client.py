@@ -36,10 +36,11 @@ class Spec:
         self.validate_summary_unit(
             self.referrers_summary_unit, "referrers_summary_unit"
         )
-        try:
-            get_date(self.created_after)
-        except:
-            raise Exception("created_after must be a valid date or relative time string like -1 week, -1 day")
+        if self.created_after:
+            try:
+                get_date(self.created_after)
+            except:
+                raise Exception("created_after must be a valid date or relative time string like -1 week, -1 day")
 
 
 class Client(ClientABC):
